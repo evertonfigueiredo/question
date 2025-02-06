@@ -125,8 +125,10 @@ class QuestionController extends Controller
             }
         }
 
-        return redirect()->route('questions.index')
-            ->with('success', 'Pergunta atualizada com sucesso!');
+        // return redirect()->route('questions.index')
+        //     ->with('success', 'Pergunta atualizada com sucesso!');
+        return redirect()->route('surveys.show', ['id' => $request->survey_id])
+        ->with('success', 'Pergunta criada com sucesso!');
     }
 
     public function destroy($id): RedirectResponse

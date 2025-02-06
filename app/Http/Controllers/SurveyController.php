@@ -23,7 +23,13 @@ class SurveyController extends Controller
      */
     public function index(Request $request): View
     {
-        $surveys = Survey::paginate();
+        if (Auth::id() === 1) {
+            $surveys = Survey::paginate();
+        } else {
+            $surveys = Survey::where('user_id', Auth::id())->paginate();
+        }
+        
+        
 
         return view('survey.index', compact('surveys'))
             ->with('i', ($request->input('page', 1) - 1) * $surveys->perPage());
