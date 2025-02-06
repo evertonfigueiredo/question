@@ -68,7 +68,7 @@
                                 </table>
 
                                 <div class="mt-4 px-4">
-                                    {!! $responseAnswers->withQueryString()->links() !!}
+                                    {!! $uniqueIds->withQueryString()->links() !!}
                                 </div>
                             </div>
                         </div>
