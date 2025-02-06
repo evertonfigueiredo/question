@@ -114,7 +114,7 @@
                                                     class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-semibold text-gray-900">
                                                     {{ $loop->iteration }}</td>
 
-                                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 max-w-xs truncate">
                                                     {{ $question->content }}</td>
 
                                                 <td
