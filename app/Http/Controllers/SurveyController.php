@@ -202,7 +202,14 @@ class SurveyController extends Controller
         $sheet->setCellValue('G1', 'Data da Resposta');
 
         // Busca os dados das pesquisas e respostas
-        $surveys = Survey::where('user_id', Auth::id())->with(['questions.answers'])->findOrFail($id)->get();
+        if (Auth::id() === 1) {
+            $surveys = Survey::with(['questions.answers'])->findOrFail($id)->get();
+        } else {
+            $surveys = Survey::where('user_id', Auth::id())->with(['questions.answers'])->findOrFail($id)->get();
+        }
+        
+        
+
         $survey = $surveys->find($id);
 
 
