@@ -105,14 +105,15 @@ class QuestionController extends Controller
     {
         
         $question = Question::findOrFail($question->id);
-
+        
         $request->validate([
             'content' => 'required|string|max:255',
             'type' => 'required|in:radio,open,multiple',
             'options' => 'nullable|array',
             'options.*' => 'nullable|string|max:255',
-            'required' => 'nullable|boolean',
+            'required' => 'nullable',
         ]);
+        // dd($request);
         // 
         // Atualiza os dados da pergunta
         $question->update([
