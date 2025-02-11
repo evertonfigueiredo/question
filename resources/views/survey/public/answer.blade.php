@@ -54,23 +54,23 @@
                             <p class="my-3">Legenda: </p>
                             <div class="flex flex-col space-y-2"> <!-- Alinhamento vertical -->
                                 <div class="flex items-center space-x-2">
-                                    <img src="{{ asset('1.png') }}" alt="1" class="w-6 h-6" />
+                                    <img src="{{ asset('1.png') }}" alt="1" class="w-6 h-6 grayscale" />
                                     <span>Discordo totalmente</span>
                                 </div>
                                 <div class="flex items-center space-x-2">
-                                    <img src="{{ asset('2.png') }}" alt="2" class="w-6 h-6" />
+                                    <img src="{{ asset('2.png') }}" alt="2" class="w-6 h-6 grayscale" />
                                     <span>Discordo</span>
                                 </div>
                                 <div class="flex items-center space-x-2">
-                                    <img src="{{ asset('3.png') }}" alt="3" class="w-6 h-6" />
+                                    <img src="{{ asset('3.png') }}" alt="3" class="w-6 h-6 grayscale"  />
                                     <span>Não concordo e nem discordo</span>
                                 </div>
                                 <div class="flex items-center space-x-2">
-                                    <img src="{{ asset('4.png') }}" alt="4" class="w-6 h-6" />
+                                    <img src="{{ asset('4.png') }}" alt="4" class="w-6 h-6 grayscale" />
                                     <span>Concordo</span>
                                 </div>
                                 <div class="flex items-center space-x-2">
-                                    <img src="{{ asset('5.png') }}" alt="5" class="w-6 h-6" />
+                                    <img src="{{ asset('5.png') }}" alt="5" class="w-6 h-6 grayscale" />
                                     <span>Concordo totalmente</span>
                                 </div>
                             </div>
