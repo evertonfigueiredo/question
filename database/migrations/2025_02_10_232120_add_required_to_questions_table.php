@@ -12,7 +12,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('questions', function (Blueprint $table) {
-            $table->dropColumn('required');
             $table->boolean('required')->default(true);
         });
     }
