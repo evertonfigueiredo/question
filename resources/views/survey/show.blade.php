@@ -64,7 +64,7 @@
                                             <dt class="text-sm font-medium leading-6 text-gray-900">Descrição da
                                                 Pesquisa</dt>
                                             <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                                                {!! nl2br(e($survey->description)) !!}</dd>
+                                                {!! nl2br($survey->description) !!}</dd>
                                         </div>
 
 

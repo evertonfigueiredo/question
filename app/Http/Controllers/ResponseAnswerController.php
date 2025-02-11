@@ -25,7 +25,7 @@ class ResponseAnswerController extends Controller
 
 
 
-        $uniqueIds = ResponseAnswer::where('survey_id', $surveyId)->groupBy('unique_id')->paginate(5);
+        $uniqueIds = ResponseAnswer::where('survey_id', $surveyId)->groupBy('unique_id')->paginate(10);
 
         // Obter todas as respostas correspondentes aos unique_id da página atual
         $responseAnswers = ResponseAnswer::whereIn('unique_id', $uniqueIds->pluck('unique_id'))

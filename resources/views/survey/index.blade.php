@@ -40,7 +40,7 @@
                                             <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-semibold text-gray-900">{{ ++$i }}</td>
                                             
 										<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500  max-w-xs truncate">{{ $survey->title }}</td>
-										<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+										<td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500  max-w-xs truncate">
                                             <button onclick="copyToClipboard('{{ url('/surveys/slug/'.$survey->slug) }}')" class="text-indigo-600 hover:text-indigo-900">
                                                 {{ $survey->slug }}
                                             </button>
