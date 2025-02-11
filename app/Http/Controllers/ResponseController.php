@@ -24,7 +24,7 @@ class ResponseController extends Controller
                 'unique_id' => $uniqueId,
                 'survey_id' => $survey->id,
                 'question_id' => $question->id,
-                'answer' => $request->input('question_' . $question->id), // Recebe as respostas da requisição
+                'answer' => $request->input('question_' . $question->id) ?? '', // Recebe as respostas da requisição
             ]);
         }
 

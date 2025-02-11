@@ -23,6 +23,15 @@
         <x-input-error class="mt-2" :messages="$errors->get('type')" />
     </div>
 
+    <div class="mt-4">
+        <label for="required" class="flex items-center space-x-2">
+            <input type="checkbox" id="required" name="required"
+                   class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                   {{ old('required', $question->required ?? false) ? 'checked' : '' }}>
+            <span>Esta pergunta é obrigatória?</span>
+        </label>
+    </div>
+
     <!-- Campo de opções para múltipla escolha (inicialmente oculto) -->
     <div id="multiple-options" style="display: none;">
         <x-input-label :value="__('Opções de Resposta')" />
@@ -66,6 +75,18 @@
         input.placeholder = "Nova opção";
         container.appendChild(input);
     }
+
+        document.addEventListener("DOMContentLoaded", function () {
+        const typeField = document.querySelector('select[name="type"]');
+        const requiredField = document.querySelector('input[name="required"]').closest('div');
+
+        function toggleRequiredField() {
+            requiredField.style.display = typeField.value === 'open' ? 'block' : 'none';
+        }
+
+        typeField.addEventListener('change', toggleRequiredField);
+        toggleRequiredField();
+    });
 
     // Garantir que o campo de opções apareça se "Múltipla Escolha" já estiver selecionado
     window.onload = function() {

@@ -47,17 +47,20 @@ class QuestionController extends Controller
      */
     public function store(Request $request)
     {
+        
         $request->validate([
             'content' => 'required|string',
             'type' => 'required|string|in:radio,open,multiple',
             'options' => 'nullable|array',
             'options.*' => 'nullable|string',
+            'required' => 'nullable',
         ]);
-
+        
         $question = Question::create([
             'content' => $request->content,
             'survey_id' => $request->survey_id,
             'type' => $request->type,
+            'required' => $request->required === 'on' ? true : false,
         ]);
 
         if ($request->type === 'multiple' && $request->has('options')) {
@@ -100,6 +103,7 @@ class QuestionController extends Controller
      */
     public function update(QuestionRequest $request, Question $question): RedirectResponse
     {
+        
         $question = Question::findOrFail($question->id);
 
         $request->validate([
@@ -107,12 +111,14 @@ class QuestionController extends Controller
             'type' => 'required|in:radio,open,multiple',
             'options' => 'nullable|array',
             'options.*' => 'nullable|string|max:255',
+            'required' => 'nullable|boolean',
         ]);
-
+        // 
         // Atualiza os dados da pergunta
         $question->update([
             'content' => $request->content,
             'type' => $request->type,
+            'required' => $request->required === 'on' ? true : false,
         ]);
        
         // Se for múltipla escolha, atualiza as opções
@@ -137,6 +143,6 @@ class QuestionController extends Controller
         Question::find($id)->delete();
 
         return Redirect::route('surveys.show', $question->survey_id)
-            ->with('success', 'Question deleted successfully!');
+            ->with('success', 'Questão deletada com sucesso!');
     }
 }

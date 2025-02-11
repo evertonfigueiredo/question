@@ -49,7 +49,7 @@
                         </div>
                     @elseif($question->type === 'open')
                         <!-- Resposta Aberta (Campo de texto) -->
-                        <textarea name="answer" required rows="4" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" placeholder="Digite sua resposta..."></textarea>
+                        <textarea name="answer" {{ $question->required ? 'required' : '' }} rows="4" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" placeholder="Digite sua resposta..."></textarea>
                     @endif
                 </div>
 

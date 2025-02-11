@@ -32,7 +32,7 @@ class Question extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['content', 'survey_id', 'type'];
+    protected $fillable = ['content', 'survey_id', 'type', 'required'];
 
 
     /**
