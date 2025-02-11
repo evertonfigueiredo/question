@@ -8,7 +8,7 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('response_answers', function (Blueprint $table) {
-            $table->text('answer_temp')->nullable(); // Nova coluna temporária
+            // $table->text('answer_temp')->nullable(); // Nova coluna temporária
         });
 
         // Copiar dados da coluna antiga para a nova
