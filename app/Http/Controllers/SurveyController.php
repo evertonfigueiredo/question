@@ -139,7 +139,7 @@ class SurveyController extends Controller
         $responseAnswer = new ResponseAnswer();
         $responseAnswer->question_id = $question->id;
         $responseAnswer->survey_id = $survey->id;
-        $responseAnswer->answer = $request->answer; // Resposta do usuário
+        $responseAnswer->answer = $request->answer ?? 'Usuário não respondeu!'; // Resposta do usuário
         $responseAnswer->unique_id = session('unique_id');  // Adiciona o unique_id
         $responseAnswer->save();
 
