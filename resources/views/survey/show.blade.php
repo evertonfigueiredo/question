@@ -115,7 +115,7 @@
                                                     {{ $loop->iteration }}</td>
 
                                                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 max-w-xs truncate">
-                                                    {{ $question->content }}</td>
+                                                    {!! nl2br($question->content) !!}</td>
 
                                                 <td
                                                     class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900">
