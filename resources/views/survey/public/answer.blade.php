@@ -24,7 +24,7 @@
                                         value="{{ $value }}" class="hidden peer"
                                         {{ old('answer', $existingResponse->answer ?? '') == $value ? 'checked' : '' }} />
                                     <img src="{{ asset($value . '.png') }}" alt="{{ $value }}"
-                                        class="w-10 h-10 opacity-50 peer-checked:opacity-100 cursor-pointer" />
+                                        class="w-9 h-9 opacity-50 peer-checked:opacity-100 cursor-pointer" />
                                 </label>
                             @endforeach
                         </div>
