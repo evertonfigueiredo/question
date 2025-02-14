@@ -37,6 +37,9 @@ Route::get('/surveys/slug/{slug}/start', [SurveyController::class, 'startSurvey'
 Route::get('/surveys/slug/{slug}/question/{question_id}', [SurveyController::class, 'showQuestion'])->name('survey.public.answer');
 Route::post('/surveys/slug/{slug}/question/{question_id}', [SurveyController::class, 'storeResponse'])->name('survey.public.storeResponse');
 Route::get('/surveys/slug/{slug}/complete', [SurveyController::class, 'completeSurvey'])->name('survey.public.complete');
+Route::get('/survey/{slug}/previous', [SurveyController::class, 'previousQuestion'])
+    ->name('survey.public.previousQuestion');
+
 
 
 

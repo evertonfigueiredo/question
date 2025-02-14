@@ -28,8 +28,8 @@ class SurveyController extends Controller
         } else {
             $surveys = Survey::where('user_id', Auth::id())->paginate();
         }
-        
-        
+
+
 
         return view('survey.index', compact('surveys'))
             ->with('i', ($request->input('page', 1) - 1) * $surveys->perPage());
@@ -99,21 +99,27 @@ class SurveyController extends Controller
 
     public function showQuestion($slug, $question_id)
     {
-
         $survey = Survey::where('slug', $slug)->firstOrFail();
         $question = Question::findOrFail($question_id);
 
         // Verificar se o usuário já respondeu essa pergunta
         $uniqueId = session('unique_id');
-        $existingResponse = ResponseAnswer::where('unique_id', $uniqueId)
-            ->where('question_id', $question->id)
-            ->first();
-        // Se já respondeu, redireciona para a próxima pergunta
-        if ($existingResponse) {
-            return $this->nextQuestion($survey, $question, $uniqueId);
+        $existingResponse = ResponseAnswer::where('survey_id', $survey->id)
+        ->where('question_id', $question->id)
+        ->where('unique_id', $uniqueId)
+        ->first();
+
+
+        // Atualiza o histórico de perguntas
+        $history = session('question_history', []);
+
+        // Adiciona ao histórico apenas se ainda não estiver lá
+        if (!in_array($question->id, $history)) {
+            $history[] = $question->id;
+            session(['question_history' => $history]);
         }
 
-        return view('survey.public.answer', compact('survey', 'question'));
+        return view('survey.public.answer', compact('survey', 'question', 'existingResponse'));
     }
 
     public function nextQuestion($survey, $currentQuestion, $uniqueId)
@@ -127,6 +133,15 @@ class SurveyController extends Controller
             return redirect()->route('survey.public.complete', $survey->slug);
         }
 
+        // Atualiza o histórico de perguntas
+        $history = session('question_history', []);
+
+        // Adiciona ao histórico apenas se ainda não estiver lá
+        if (!in_array($nextQuestion->id, $history)) {
+            $history[] = $nextQuestion->id;
+            session(['question_history' => $history]);
+        }
+
         return redirect()->route('survey.public.answer', ['slug' => $survey->slug, 'question_id' => $nextQuestion->id]);
     }
 
@@ -136,16 +151,64 @@ class SurveyController extends Controller
         $survey = Survey::where('slug', $slug)->firstOrFail();
         $question = Question::findOrFail($question_id);
 
-        $responseAnswer = new ResponseAnswer();
-        $responseAnswer->question_id = $question->id;
-        $responseAnswer->survey_id = $survey->id;
-        $responseAnswer->answer = $request->answer ?? 'Usuário não respondeu!'; // Resposta do usuário
-        $responseAnswer->unique_id = session('unique_id');  // Adiciona o unique_id
-        $responseAnswer->save();
+        // Verifica se o usuário já respondeu a esta pergunta
+        $responseAnswer = ResponseAnswer::where('question_id', $question->id)
+            ->where('survey_id', $survey->id)
+            ->where('unique_id', session('unique_id'))
+            ->first();
+
+        if ($responseAnswer) {
+            // Se já respondeu, apenas atualiza a resposta
+            $responseAnswer->answer = $request->answer ?? 'Usuário não respondeu!';
+            $responseAnswer->save();
+        } else {
+            // Caso contrário, cria uma nova resposta
+            $responseAnswer = new ResponseAnswer();
+            $responseAnswer->question_id = $question->id;
+            $responseAnswer->survey_id = $survey->id;
+            $responseAnswer->answer = $request->answer ?? 'Usuário não respondeu!';
+            $responseAnswer->unique_id = session('unique_id');
+            $responseAnswer->save();
+        }
+
+        // Atualiza o histórico de perguntas respondidas
+        $history = session('question_history', []);
+
+        // Adiciona ao histórico apenas se ainda não estiver lá
+        if (!in_array($question->id, $history)) {
+            $history[] = $question->id;
+            session(['question_history' => $history]);
+        }
 
         // Redireciona para a próxima pergunta
         return $this->nextQuestion($survey, $question, session('unique_id'));
     }
+
+    public function previousQuestion($slug)
+    {
+        $survey = Survey::where('slug', $slug)->firstOrFail();
+        $history = session('question_history', []);
+
+        if (count($history) > 1) {
+            // Remove a última pergunta do histórico (a pergunta atual)
+            array_pop($history);
+
+            // Obtém a nova última pergunta do histórico (a pergunta anterior)
+            $previousQuestionId = end($history);
+
+            // Atualiza a sessão com o histórico atualizado
+            session(['question_history' => $history]);
+
+            // Redireciona para a pergunta anterior
+            $url = url("/surveys/slug/{$survey->slug}/question/{$previousQuestionId}");
+            return redirect($url);
+        }
+
+        // Se não houver histórico suficiente, redireciona para a primeira pergunta
+        $url = url("/surveys/slug/{$survey->slug}/question/{$survey->questions()->first()->id}");
+        return redirect($url);
+    }
+
 
     public function completeSurvey($slug)
     {
@@ -207,8 +270,8 @@ class SurveyController extends Controller
         } else {
             $surveys = Survey::where('user_id', Auth::id())->with(['questions.answers'])->findOrFail($id)->get();
         }
-        
-        
+
+
 
         $survey = $surveys->find($id);
 
