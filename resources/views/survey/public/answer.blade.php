@@ -21,7 +21,7 @@
                             @foreach ([1, 2, 3, 4, 5] as $value)
                                 <label for="option{{ $value }}">
                                     <input type="radio" name="answer" id="option{{ $value }}"
-                                        value="{{ $value }}" class="hidden peer" required
+                                        value="{{ $value }}" class="opacity-0 absolute peer" required
                                         {{ old('answer', $existingResponse->answer ?? '') == $value ? 'checked' : '' }} />
                                     <img src="{{ asset($value . '.png') }}" alt="{{ $value }}"
                                         class="w-9 h-9 opacity-50 peer-checked:opacity-100 cursor-pointer" />
