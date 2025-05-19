@@ -248,7 +248,7 @@ class SurveyController extends Controller
     }
 
 
-    public function export($id)
+    public function exportBackup($id)
     {
 
         // Cria uma nova instância do Spreadsheet
@@ -350,4 +350,69 @@ class SurveyController extends Controller
             'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
         ]);
     }
+
+    public function export($id)
+{
+    $spreadsheet = new Spreadsheet();
+    $sheet = $spreadsheet->getActiveSheet();
+
+    // Carrega a pesquisa
+    if (Auth::id() === 1) {
+        $survey = Survey::with(['questions.answers'])->findOrFail($id);
+    } else {
+        $survey = Survey::where('user_id', Auth::id())->with(['questions.answers'])->findOrFail($id);
+    }
+
+    // Lista de perguntas ordenadas (importante para manter a ordem das colunas)
+    $questions = $survey->questions;
+
+    // Agrupar respostas por unique_id
+    $groupedAnswers = [];
+
+    foreach ($questions as $question) {
+        foreach ($question->answers as $answer) {
+            $groupedAnswers[$answer->unique_id]['created_at'] = $answer->created_at->format('d/m/Y H:i:s');
+            $groupedAnswers[$answer->unique_id]['unique_id'] = $answer->unique_id;
+            $groupedAnswers[$answer->unique_id]['answers'][$question->id] = $answer->answer;
+        }
+    }
+
+    // Cabeçalhos
+    $sheet->setCellValue('A1', 'Data');
+    $sheet->setCellValue('B1', 'Usuário');
+
+    $col = 'C';
+    foreach ($questions as $question) {
+        $sheet->setCellValue($col . '1', $question->content);
+        $col++;
+    }
+
+    // Preenchendo os dados por usuário
+    $row = 2;
+    foreach ($groupedAnswers as $entry) {
+        $sheet->setCellValue('A' . $row, $entry['created_at']);
+        $sheet->setCellValue('B' . $row, $entry['unique_id']);
+
+        $col = 'C';
+        foreach ($questions as $question) {
+            $resposta = $entry['answers'][$question->id] ?? ''; // pode não ter respondido
+            $sheet->setCellValue($col . $row, $resposta);
+            $col++;
+        }
+
+        $row++;
+    }
+
+    // Exportar
+    $writer = new Xlsx($spreadsheet);
+    $fileName = 'respostas_' . now()->format('Ymd_His') . '.xlsx';
+
+    return new StreamedResponse(function () use ($writer) {
+        $writer->save('php://output');
+    }, 200, [
+        'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+    ]);
+}
+
 }
